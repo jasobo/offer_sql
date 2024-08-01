@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  oracle:
+    image: gvenzl/oracle-xe
+    container_name: oracle-xe
+    ports:
+      - 1521:1521
+      - 5500:5500
+    environment:
+      ORACLE_PWD: ghi084572
+
+
+  app:
+    build:
+      context: .
+    image: my-sqlapp:latest
+    container_name: sqlapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - oracle-e
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-xe:1521:XE
+      SPRING_DATASOURCE_USERNAME: system
+      SPRING_DATASOURCE_PASSWORD: ghi084572
