@@ -1,8 +1,6 @@
 package de.sobotta.controller;
 
 import de.sobotta.DTO.PersonDTO;
-import de.sobotta.model.Person;
-import de.sobotta.repository.PersonRepository;
 import de.sobotta.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
