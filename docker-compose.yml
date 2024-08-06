@@ -10,6 +10,8 @@ services:
     environment:
       ORACLE_PWD: ghi084572
       ORACLE_CHARACTERSET: AL32UTF8
+    volumes:
+      - oradata:/opt/oracle/oradata
 
   app:
     build:
@@ -22,5 +24,8 @@ services:
       - oracle-db
     environment:
       SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe
-      SPRING_DATASOURCE_USERNAME: system
+      SPRING_DATASOURCE_USERNAME: C##JAN
       SPRING_DATASOURCE_PASSWORD: ghi084572
+
+volumes:
+  oradata:

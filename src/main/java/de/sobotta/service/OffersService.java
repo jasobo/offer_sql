@@ -3,16 +3,19 @@ package de.sobotta.service;
 import de.sobotta.DTO.OfferDTO;
 import de.sobotta.model.Offers;
 import de.sobotta.repository.OffersRepository;
+import de.sobotta.utils.GlobalExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class OffersService {
+    private static final Logger logger = LoggerFactory.getLogger(OffersService.class);
     @Autowired
     private OffersRepository offersRepository;
 
@@ -26,39 +29,71 @@ public class OffersService {
         return offerDTOs;
     }
 
-    public OfferDTO findById(long offerId) {
-        Optional<Offers> optionalOffer = offersRepository.findById(offerId);
-        if (optionalOffer.isPresent()) {
-            return mapToDTO(optionalOffer.get());
-        } else {
-            throw new RuntimeException("Offer not found with id: " + offerId);
+    public OfferDTO findByOfferNr(String offerNr) {
+        try {
+            Offers offer = offersRepository.findByOfferNr(offerNr)
+                    .orElseThrow(()-> new GlobalExceptionHandler.NotFoundException(offerNr));
+            logger.info("Found offer: " + offer.getOfferNr());
+            return mapToDTO(offer);
+        }
+        catch (GlobalExceptionHandler.NotFoundException e){
+            logger.error(e.getMessage());
+            throw e;
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException("Error finding offer");
         }
     }
 
     public OfferDTO save(OfferDTO offerDTO) {
-        Offers offers = mapToOffers(offerDTO);
-        offers.setOfferNr(generatedOfferNr());
-        offersRepository.save(offers);
-        return offerDTO;
+        try {
+            Offers offers = mapToOffers(offerDTO);
+            offers.setOfferNr(generatedOfferNr());
+            offersRepository.save(offers);
+            logger.info("Offers saved successfully");
+            return offerDTO;
+        }catch (Exception e) {
+            logger.error("Error saving offer");
+            throw new RuntimeException("Error saving offer");
+        }
     }
 
-    public OfferDTO update(long offerId, OfferDTO offerDTO) {
-        Optional<Offers> optionalOffer = offersRepository.findById(offerId);
-        if (optionalOffer.isPresent()) {
-            Offers toUpdate = optionalOffer.get();
+    public OfferDTO update(String offerNr, OfferDTO offerDTO) {
+        try{
+        Offers toUpdate = offersRepository.findByOfferNr(offerNr)
+                .orElseThrow(()-> new GlobalExceptionHandler.NotFoundException(offerNr));
+
             toUpdate.setOfferName(offerDTO.getOfferName());
             toUpdate.setOfferType(offerDTO.getOfferType());
             toUpdate.setPrice(offerDTO.getPrice());
             toUpdate.setValidUntil(offerDTO.getValidUntil());
+            logger.info("Updating offer: " + toUpdate.getOfferNr());
             offersRepository.save(toUpdate);
             return mapToDTO(toUpdate);
-        } else {
-            throw new RuntimeException("Offer not found with id: " + offerId);
+        }catch (GlobalExceptionHandler.NotFoundException e){
+            logger.error(e.getMessage());
+            throw e;
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException("Error updating offer");
         }
     }
 
-    public void delete(long offerId) {
-        offersRepository.deleteById(offerId);
+    public void delete(String offerNr) {
+        try {
+            Offers toDelete = offersRepository.findByOfferNr(offerNr)
+                    .orElseThrow(() -> new GlobalExceptionHandler.NotFoundException(offerNr));
+            logger.info("Deleting offer: " + toDelete.getOfferNr());
+            offersRepository.deleteById(toDelete.getOfferId());
+        }catch (GlobalExceptionHandler.NotFoundException e){
+            logger.error(e.getMessage());
+            throw e;
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException("Error deleting offer");
+        }
     }
 
     private String generatedOfferNr() {

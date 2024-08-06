@@ -19,7 +19,7 @@ public class Person {
     private String personNr;
     private String firstName;
     private String lastName;
-    private Date birthDay;
+    private Date birthday;
     private String street;
     private String city;
 }
