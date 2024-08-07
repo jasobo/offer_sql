@@ -22,6 +22,7 @@ services:
       - "8080:8080"
     depends_on:
       - oracle-db
+    entrypoint: ["/bin/sh", "-c", "sleep 20 && java -jar /app/app.jar"]
     environment:
       SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe
       SPRING_DATASOURCE_USERNAME: C##JAN

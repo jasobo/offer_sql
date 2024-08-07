@@ -1,14 +1,11 @@
 package de.sobotta.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,24 +14,25 @@ import java.util.Date;
 @Table(name = "OFFERS", schema = "C##JAN")
 public class Offers {
     @Id
-    @Column(name = "offerId")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "offer_Id")
     private long offerId;
 
-    @Column(name = "offerNr")
+    @Column(name = "offer_Nr")
     private String offerNr;
 
-    @Column(name = "offerName")
+    @Column(name = "offer_Name")
     private String offerName;
 
-    @Column(name = "offerType")
+    @Column(name = "offer_Type")
     private long offerType;
 
     @Column(name = "price")
     private float price;
 
-    @Column(name = "creationDate")
-    private Date creationDate;
+    @Column(name = "creation_Date")
+    private LocalDate creationDate;
 
-    @Column(name = "validUntil")
-    private Date validUntil;
+    @Column(name = "valid_Until")
+    private LocalDate validUntil;
 }

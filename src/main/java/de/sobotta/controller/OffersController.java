@@ -1,6 +1,7 @@
 package de.sobotta.controller;
 
 import de.sobotta.DTO.OfferDTO;
+import de.sobotta.response.OffersResponse;
 import de.sobotta.service.OffersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +32,7 @@ public class OffersController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)})
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public List<OfferDTO> getAll() {
+    public List<OffersResponse> getAll() {
         return offersService.findAll();
     }
 
@@ -46,8 +47,8 @@ public class OffersController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)})
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @GetMapping("{offerNr}")
-    public OfferDTO getByOfferNr(@PathVariable String offerNr) {
+    @GetMapping("/{offerNr}")
+    public OffersResponse getByOfferNr(@PathVariable String offerNr) {
         return offersService.findByOfferNr(offerNr);
     }
 
@@ -61,7 +62,7 @@ public class OffersController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)})
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public OfferDTO create(@RequestBody OfferDTO offerDTO) {
+    public OffersResponse create(@RequestBody OfferDTO offerDTO) {
         return offersService.save(offerDTO);
     }
 
@@ -76,10 +77,11 @@ public class OffersController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)})
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("{offerNr}")
-    public OfferDTO update(@PathVariable String offerNr, @RequestBody OfferDTO offerDTO) {
+    @PutMapping("/{offerNr}")
+    public OffersResponse update(@PathVariable String offerNr, @RequestBody OfferDTO offerDTO) {
         return offersService.update(offerNr, offerDTO);
     }
+
     @Operation(summary = "Delete an offer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Offer was dealt with",
@@ -91,7 +93,7 @@ public class OffersController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)})
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("{offerNr}")
+    @DeleteMapping("/{offerNr}")
     public void delete(@PathVariable String offerNr) {
         offersService.delete(offerNr);
     }

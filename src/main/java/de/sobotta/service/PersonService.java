@@ -48,7 +48,7 @@ public class PersonService {
             Person toUpdate = optionalPerson.get();
             toUpdate.setFirstName(personDTO.getFirstName());
             toUpdate.setLastName(personDTO.getLastName());
-            toUpdate.setBirthDay(personDTO.getBirthDay());
+            toUpdate.setBirthday(personDTO.getBirthday());
             toUpdate.setStreet(personDTO.getStreet());
             toUpdate.setCity(personDTO.getCity());
             personRepository.save(toUpdate);
@@ -77,7 +77,7 @@ public class PersonService {
         personDTO.setPersonNr(person.getPersonNr());
         personDTO.setFirstName(person.getFirstName());
         personDTO.setLastName(person.getLastName());
-        personDTO.setBirthDay(person.getBirthDay());
+        personDTO.setBirthday(person.getBirthday());
         personDTO.setStreet(person.getStreet());
         personDTO.setCity(person.getCity());
         return personDTO;
@@ -89,7 +89,7 @@ public class PersonService {
         person.setPersonNr(personDTO.getPersonNr());
         person.setFirstName(personDTO.getFirstName());
         person.setLastName(personDTO.getLastName());
-        person.setBirthDay(personDTO.getBirthDay());
+        person.setBirthday(personDTO.getBirthday());
         person.setStreet(personDTO.getStreet());
         person.setCity(personDTO.getCity());
         return person;
