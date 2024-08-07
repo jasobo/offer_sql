@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Entity
-@Table(name = "OFFERS", schema = "C##JAN")
+@Table(name = "OFFERS")
 public class Offers {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
