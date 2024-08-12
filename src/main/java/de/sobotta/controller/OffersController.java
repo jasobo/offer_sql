@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/offers")
 public class OffersController {
+    private static final Logger logger = LoggerFactory.getLogger(OffersService.class);
     @Autowired
     private OffersService offersService;
 
@@ -49,6 +52,7 @@ public class OffersController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{offerNr}")
     public OffersResponse getByOfferNr(@PathVariable String offerNr) {
+        logger.info("Hello");
         return offersService.findByOfferNr(offerNr);
     }
 

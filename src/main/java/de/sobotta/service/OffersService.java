@@ -8,6 +8,7 @@ import de.sobotta.utils.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -96,9 +97,25 @@ public class OffersService {
         }
     }
 
+    @Scheduled(cron = "0 0 0 * * *")
+    private void deleteAfterExpire(){
+        try {
+            LocalDate day = LocalDate.now();
+            List<Offers> expired = offersRepository.findAllByValidUntilBefore(day);
+            offersRepository.deleteAll(expired);
+            logger.info("Expired offers were deleted.");
+        } catch(Exception e) {
+            logger.error("Error during offer cleanup task", e);
+        }
+    }
+
     private String generatedOfferNr() {
-        int numberPart = new Random().nextInt(99999);
-        return "O" + String.format("%05d", numberPart);
+        String offerNr;
+        do {
+            int numberPart = new Random().nextInt(99999);
+            offerNr = "O" + String.format("%05d", numberPart);
+        } while (!offersRepository.existsByOfferNr(offerNr));
+        return offerNr;
     }
 
     /*public OfferDTO mapToDTO(Offers offers) {

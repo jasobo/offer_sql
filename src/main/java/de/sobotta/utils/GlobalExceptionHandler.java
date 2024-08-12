@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
 
     public static class NotFoundException extends RuntimeException {
 
-        public NotFoundException(String customerNr) {
-            super("Customer not found with number: " + customerNr);
+        public NotFoundException(String offerNr) {
+            super("Offer not found with number: " + offerNr);
         }
     }
 }
