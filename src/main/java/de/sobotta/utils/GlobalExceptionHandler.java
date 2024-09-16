@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
             super("Offer not found with number: " + offerNr);
         }
     }
+
+    public static class InvalidInputException extends IllegalArgumentException {
+        public InvalidInputException(String input) {
+            super("Invalid input: " + input);
+        }
+    }
 }

@@ -20,9 +20,10 @@ services:
     container_name: sqlapp
     ports:
       - "8080:8080"
+      - "5005:5005" # Debugging Port
     depends_on:
       - oracle-db
-    entrypoint: ["/bin/sh", "-c", "sleep 20 && java -jar /app/app.jar"]
+    entrypoint: ["/bin/sh", "-c", "sleep 20 && java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /app/app.jar"]
     environment:
       SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe
       SPRING_DATASOURCE_USERNAME: C##JAN

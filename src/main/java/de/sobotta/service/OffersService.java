@@ -7,6 +7,7 @@ import de.sobotta.response.OffersResponse;
 import de.sobotta.utils.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -118,14 +119,14 @@ public class OffersService {
         return offerNr;
     }
 
-    /*public OfferDTO mapToDTO(Offers offers) {
+    public OfferDTO mapToDTO(Offers offers) {
         OfferDTO offerDTO = new OfferDTO();
         offerDTO.setOfferName(offers.getOfferName());
         offerDTO.setOfferType(offers.getOfferType());
         offerDTO.setPrice(offers.getPrice());
         offerDTO.setValidUntil(offers.getValidUntil());
         return offerDTO;
-    }*/
+    }
 
     public OffersResponse mapToResponse(Offers offers) {
         OffersResponse offersResponse = new OffersResponse();
@@ -146,5 +147,43 @@ public class OffersService {
         offers.setPrice(offerDTO.getPrice());
         offers.setValidUntil(offerDTO.getValidUntil());
         return offers;
+    }
+
+    public List<OfferDTO> searchAll(String offerName, long offerType, float price, LocalDate validUntil) {
+        try{
+            List<Offers> offers = offersRepository.findAll((root, query, cb) -> {
+                List<Predicate> predicates = new ArrayList<>();
+
+                if(offerName != null && !offerName.isEmpty()){
+                    predicates.add(cb.like(root.get("offerName"), "%"+offerName+"%"));
+                }
+
+                if(offerType != 0){
+                    predicates.add(cb.equal(root.get("offerType"), offerType));
+                }
+
+                if(price != 0){
+                    predicates.add(cb.greaterThanOrEqualTo(root.get("price"), price));
+                }
+                if(validUntil != null){
+                    predicates.add(cb.lessThanOrEqualTo(root.get("validUntil"), validUntil));
+                }
+                return cb.and(predicates.toArray(new Predicate[0]));
+            });
+
+            List<OfferDTO> responseList = new ArrayList<>();
+            for (Offers offer : offers) {
+                responseList.add(mapToDTO(offer));
+            }
+
+            return responseList;
+
+        } catch (GlobalExceptionHandler.NotFoundException e) {
+            logger.error(e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException("Error finding offer");
+        }
     }
 }

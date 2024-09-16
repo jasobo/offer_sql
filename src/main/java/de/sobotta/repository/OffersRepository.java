@@ -2,6 +2,7 @@ package de.sobotta.repository;
 
 import de.sobotta.model.Offers;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface OffersRepository extends JpaRepository<Offers, Long> {
+public interface OffersRepository extends JpaRepository<Offers, Long>, JpaSpecificationExecutor<Offers> {
     @Query(value = "SELECT * FROM OFFERS WHERE offer_Nr = :offerNr", nativeQuery = true)
     Optional<Offers> findByOfferNr(@Param("offerNr") String offerNr);
 
